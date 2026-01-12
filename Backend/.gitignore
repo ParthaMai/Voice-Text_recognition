@@ -1,0 +1,6 @@
+__pycache__/
+uploads/
+.env
+*.wav
+*.webm
+*.mp3
