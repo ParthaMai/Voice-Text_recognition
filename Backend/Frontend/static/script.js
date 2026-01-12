@@ -30,7 +30,7 @@ recordBtn.onclick = async () => {
             console.log("Audio blob size:", audioBlob.size);
 
             const formData = new FormData();
-            formData.append("file", audioBlob, "recording.webm"); // <- important to give a filename
+            formData.append("file", audioBlob, "recording.webm"); 
 
             output.value = "Transcribing...";
 

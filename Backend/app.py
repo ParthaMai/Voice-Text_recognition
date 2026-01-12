@@ -10,7 +10,6 @@ import subprocess
 
 app = FastAPI()
 
-# ===== Enable CORS =====
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,19 +17,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ===== FFmpeg path (self-contained) =====
 FFMPEG_BIN = r"C:\ffmpeg\bin"
 os.environ["PATH"] = FFMPEG_BIN + os.pathsep + os.environ["PATH"]
 
-# # Patch whisper.audio to use full ffmpeg path
 # import whisper.audio as wa
-
 # wa.get_ffmpeg_exe = lambda: FFMPEG_PATH
 
-# ===== Load Whisper model =====
+# Whisper model 
 model = whisper.load_model("base")
 
-# ===== Upload folder =====
+
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
@@ -41,7 +37,7 @@ app.mount("/static", StaticFiles(directory="./Frontend/static"), name="static")
 def index():
     return FileResponse("./Frontend/index.html")
 
-# ===== Transcribe endpoint =====
+
 @app.post("/transcribe")
 async def transcribe_audio(file: UploadFile = File(...)):
     ext = os.path.splitext(file.filename)[1] or ".webm"
@@ -52,7 +48,7 @@ async def transcribe_audio(file: UploadFile = File(...)):
             shutil.copyfileobj(file.file, buffer)
         print(f"Saved file to {file_path}")
 
-        # Transcribe with Whisper (uses patched FFMPEG_PATH)
+
         result = model.transcribe(file_path)
         print("Transcription result:", result["text"])
         return {"text": result["text"]}

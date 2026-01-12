@@ -30,7 +30,6 @@ button {
     color: white;
 }
 
-/* Add visual feedback while recording */
 #recordBtn.recording {
     background: red;
     color: white;
