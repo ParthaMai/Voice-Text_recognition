@@ -39,12 +39,35 @@ recordBtn.onclick = async () => {
                     method: "POST",
                     body: formData
                 });
-
                 const data = await response.json();
                 console.log("Server response:", data);
+                if (data.error){
+                    output.value = "❌ Error: " + data.error;
+                }
+                else{
+                    const topEmotion = data.emotion[0][0];
+                    const emotion = topEmotion.label;
+                    const score = (topEmotion.score * 100).toFixed(1);
 
-                if (data.error) output.value = "Error: " + data.error;
-                else output.value = data.text || "No text returned";
+                    let emoji = "😐";
+
+                    if(emotion==="joy") emoji="😊";
+                    else if(emotion==="anger") emoji="😡";
+                    else if(emotion==="sadness") emoji="😢";
+                    else if(emotion==="fear") emoji="😨";
+                    else if(emotion==="surprise") emoji="😲";
+                    else if(emotion==="disgust") emoji="🤢";
+                    else if(emotion==="neutral") emoji="😐";
+
+                    output.value = `📝 Text:
+${data.text.trim()}
+
+🎭 Emotion:
+${emoji} ${emotion}
+
+📊 Confidence:
+${score}%`;
+                    }
             } catch (err) {
                 output.value = "Network error: " + err;
             }
